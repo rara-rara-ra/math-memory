@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>数学・神経衰弱｜教員用</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+body{font-family:system-ui,"Noto Sans JP",sans-serif;background:#f4f6fa;margin:0;color:#172033}
+header{background:#183b78;color:#fff;text-align:center;padding:16px}main{max-width:900px;margin:auto;padding:18px}
+.panel{background:#fff;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 4px 16px #0001}
+textarea{width:100%;height:230px;padding:12px;border:1px solid #bcc7d8;border-radius:9px;font-size:17px;font-family:inherit;box-sizing:border-box}
+button{border:0;border-radius:9px;padding:11px 17px;font-size:16px;cursor:pointer}.primary{background:#2563eb;color:#fff}
+.help{font-size:14px;color:#5b6678;line-height:1.7}.url{padding:11px;background:#f8fafc;border:1px solid #dbe3ef;border-radius:8px;word-break:break-all}
+#qr{display:flex;justify-content:center;margin:18px 0}#qr img,#qr canvas{max-width:100%;height:auto}
+.warn{background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:10px;color:#9a3412}
+</style></head><body><header><h1>数学・神経衰弱　教員用</h1></header>
+<main>
+<section class="panel"><h2>① 問題を設定</h2>
+<p class="help">1行に「関数｜導関数」で入力してください。<br>例：<strong>x²｜2x</strong></p>
+<textarea id="pairs">x²｜2x
+x³｜3x²
+2x²+3x−1｜4x+3
+3x²−5x+2｜6x−5
+x³−2x²+x｜3x²−4x+1
+2x³+3x²−4x+1｜6x²+6x−4
+5x²−4x+7｜10x−4
+−x³+4x²−2x｜−3x²+8x−2</textarea><br><br>
+<button class="primary" onclick="makeQR()">生徒用QRコードを作成</button>
+<div id="localWarn" class="warn" style="display:none;margin-top:12px">このページをPC内のHTMLファイルとして開いています。QRコードは作れても、生徒のスマートフォンからは file:// のURLを開けません。先にGitHub Pagesで公開してください。</div>
+</section>
+<section id="result" class="panel" style="display:none"><h2>② 生徒に配布</h2>
+<p class="help">このQRコードをプロジェクターに表示し、生徒に読み取ってもらってください。</p>
+<div id="url" class="url"></div><div id="qr"></div>
+<button onclick="printQR()">QRコードを印刷</button>
+</section></main>
+<script>
+if(location.protocol==='file:')document.getElementById('localWarn').style.display='block';
+function makeQR(){
+ const pairs=document.getElementById('pairs').value.split(/\n/).map(s=>s.trim()).filter(Boolean).map(s=>s.split(/[|｜]/)).filter(a=>a.length>=2).map(a=>[a[0].trim(),a.slice(1).join('|').trim()]);
+ if(pairs.length<2){alert('2ペア以上入力してください。');return}
+ if(location.protocol==='file:'){alert('先にGitHub Pagesで公開してください。\n現在はPC内のファイルとして開かれています。');return}
+ const payload=btoa(unescape(encodeURIComponent(JSON.stringify(pairs))));
+ const u=new URL('student.html',location.href).href+'#'+payload;
+ document.getElementById('result').style.display='block';
+ document.getElementById('url').textContent=u;
+ const q=document.getElementById('qr');q.innerHTML='';
+ new QRCode(q,{text:u,width:320,height:320,correctLevel:QRCode.CorrectLevel.M});
+}
+function printQR(){window.print()}
+</script></body></html>

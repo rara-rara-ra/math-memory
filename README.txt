@@ -1,0 +1,1 @@
+GitHub Pages用。teacher.htmlとstudent.htmlを同じ場所に配置してください。teacher.htmlはGitHub Pages上のURLで開いてください。ローカルfile://ではQR発行を停止します。
